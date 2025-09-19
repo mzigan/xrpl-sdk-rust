@@ -88,7 +88,7 @@ pub struct NFToken {
     pub nftoken_taxon: u32,
     /// The URI data associated with this NFToken, in hexadecimal.
     #[serde(rename = "URI")]
-    pub uri: String,
+    pub uri: Option<String>,
     /// The token sequence number of this NFToken, which is unique for its issuer.
     pub nft_serial: u32,
 }
