@@ -16,17 +16,6 @@ pub struct AccountNftsRequest {
     pub ledger_spec: RetrieveLedgerSpec,
     #[serde(flatten)]
     pub pagination: RequestPagination,
-
-    // #[serde(skip_serializing_if = "Option::is_none")]
-    // ledger_hash: Option<String>,
-    // #[serde(skip_serializing_if = "Option::is_none")]
-    // ledger_index: Option<String>,
-    // #[serde(skip_serializing_if = "Option::is_none")]
-    // limit: Option<u32>,
-    // /// Value from a previous paginated response. Resume retrieving data where
-    // /// that response left off.
-    // #[serde(skip_serializing_if = "Option::is_none")]
-    // marker: Option<String>,
 }
 
 impl Request for AccountNftsRequest {
@@ -95,16 +84,11 @@ pub struct NFToken {
 
 #[derive(Debug, Deserialize)]
 pub struct AccountNftsResponse {
-    pub account: String,
     pub account_nfts: Vec<NFToken>,
-    pub validated: bool,
-
     #[serde(flatten)]
     pub ledger_spec: ReturnLedgerSpec,
     #[serde(flatten)]
     pub pagination: ResponsePagination,
-
-    // #TODO add missing fields
 }
 
 impl WithResponsePagination for AccountNftsResponse {
