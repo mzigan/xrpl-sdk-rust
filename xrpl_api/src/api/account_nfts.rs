@@ -3,7 +3,7 @@
 //!
 //! <https://xrpl.org/account_nfts.html>
 
-use crate::Request;
+use crate::{Request, RequestPagination, ResponsePagination, RetrieveLedgerSpec, ReturnLedgerSpec, WithLedgerSpec, WithRequestPagination, WithResponsePagination};
 use serde::{Deserialize, Serialize};
 
 #[derive(Default, Debug, Clone, Serialize)]
@@ -11,16 +11,22 @@ pub struct AccountNftsRequest {
     /// The unique identifier of an account, typically the account's Address.
     /// The request returns a list of NFTs owned by this account.
     account: String,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    ledger_hash: Option<String>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    ledger_index: Option<String>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    limit: Option<u32>,
-    /// Value from a previous paginated response. Resume retrieving data where
-    /// that response left off.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    marker: Option<String>,
+
+    #[serde(flatten)]
+    pub ledger_spec: RetrieveLedgerSpec,
+    #[serde(flatten)]
+    pub pagination: RequestPagination,
+
+    // #[serde(skip_serializing_if = "Option::is_none")]
+    // ledger_hash: Option<String>,
+    // #[serde(skip_serializing_if = "Option::is_none")]
+    // ledger_index: Option<String>,
+    // #[serde(skip_serializing_if = "Option::is_none")]
+    // limit: Option<u32>,
+    // /// Value from a previous paginated response. Resume retrieving data where
+    // /// that response left off.
+    // #[serde(skip_serializing_if = "Option::is_none")]
+    // marker: Option<String>,
 }
 
 impl Request for AccountNftsRequest {
@@ -28,6 +34,26 @@ impl Request for AccountNftsRequest {
 
     fn method(&self) -> String {
         "account_nfts".to_owned()
+    }
+}
+
+impl WithLedgerSpec for AccountNftsRequest {
+    fn as_ledger_spec(&self) -> &crate::RetrieveLedgerSpec {
+        &self.ledger_spec
+    }
+
+    fn as_ledger_spec_mut(&mut self) -> &mut crate::RetrieveLedgerSpec {
+        &mut self.ledger_spec
+    }
+}
+
+impl WithRequestPagination for AccountNftsRequest {
+    fn as_pagination(&self) -> &RequestPagination {
+        &self.pagination
+    }
+
+    fn as_pagination_mut(&mut self) -> &mut RequestPagination {
+        &mut self.pagination
     }
 }
 
@@ -72,5 +98,17 @@ pub struct AccountNftsResponse {
     pub account: String,
     pub account_nfts: Vec<NFToken>,
     pub validated: bool,
+
+    #[serde(flatten)]
+    pub ledger_spec: ReturnLedgerSpec,
+    #[serde(flatten)]
+    pub pagination: ResponsePagination,
+
     // #TODO add missing fields
+}
+
+impl WithResponsePagination for AccountNftsResponse {
+    fn as_pagination(&self) -> &ResponsePagination {
+        &self.pagination
+    }
 }
