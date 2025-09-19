@@ -137,9 +137,6 @@ impl Client {
         if response.status() == 200 {
             let body: serde_json::Value = response.json().await?;
 
-            println!("response status: {:?}", body);
-
-
             let status = body["result"]["status"].as_str().unwrap_or("error");
 
             if status == "error" {
